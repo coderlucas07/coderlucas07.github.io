@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Codigo de autorizacion</title>
+<style>
+  :root{--bg:#fafafa;--card:#fff;--fg:#111;--mut:#666;--bd:#e3e3e3;--ok:#0a7;--warn:#c40}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0e0e10;--card:#1a1a1d;--fg:#eee;--mut:#999;--bd:#2c2c31}}
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,sans-serif;
+       margin:0;padding:16px;display:grid;place-items:center;min-height:100vh}
+  .card{background:var(--card);border:1px solid var(--bd);border-radius:14px;
+        padding:28px;max-width:620px;width:100%}
+  h1{font-size:1.15rem;margin:0 0 4px}
+  .sub{color:var(--mut);font-size:.9rem;margin:0 0 20px}
+  code{display:block;background:var(--bg);border:1px solid var(--bd);border-radius:10px;
+       padding:16px;font:14px/1.5 ui-monospace,Menlo,monospace;word-break:break-all;
+       user-select:all;margin-bottom:14px}
+  button{background:var(--fg);color:var(--card);border:0;border-radius:9px;
+         padding:11px 20px;font-size:.95rem;font-weight:600;cursor:pointer}
+  button:active{opacity:.75}
+  .ok{color:var(--ok);font-size:.9rem;margin-left:10px}
+  .warn{color:var(--warn)}
+  .note{color:var(--mut);font-size:.82rem;margin-top:18px;border-top:1px solid var(--bd);padding-top:14px}
+</style></head>
+<body><main class="card">
+<h1>Código de autorización</h1>
+<p class="sub">Copialo y pegáselo a Claude. Vence en pocos minutos.</p>
+<code id="c">—</code>
+<button id="b">Copiar</button><span class="ok" id="m"></span>
+<p class="note">Esta página no envía el código a ningún lado: solo lo lee de la barra de direcciones y lo muestra acá.</p>
+</main>
+<script>
+  var p = new URLSearchParams(location.search);
+  var code = p.get('code'), err = p.get('error');
+  var el = document.getElementById('c');
+  if (code) { el.textContent = code; }
+  else if (err) { el.textContent = 'Error: ' + err + (p.get('error_description') ? ' — ' + p.get('error_description') : ''); el.className = 'warn'; }
+  else { el.textContent = 'No hay ningún código en la URL todavía.'; }
+  document.getElementById('b').onclick = function(){
+    if (!code) return;
+    navigator.clipboard.writeText(code).then(function(){
+      document.getElementById('m').textContent = '✓ copiado';
+    });
+  };
+</script></body></html>
